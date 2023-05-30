@@ -24,30 +24,25 @@ from transformers.optimization import get_cosine_schedule_with_warmup
 # GPU 사용 세팅
 device = torch.device('cuda:0')
 
-  
 # 모델 불러오기   
 bertmodel, vocab = get_pytorch_kobert_model(cachedir=".cache")
 
- 
 # 데이터셋 다운로드
 os.system('wget -O .cache/ratings_train.txt http://skt-lsl-nlp-model.s3.amazonaws.com/KoBERT/datasets/nsmc/ratings_train.txt')
 os.system('wget -O .cache/ratings_test.txt http://skt-lsl-nlp-model.s3.amazonaws.com/KoBERT/datasets/nsmc/ratings_test.txt')
-
 
 # 데이터셋 불러오기
 dataset_train = nlp.data.TSVDataset(".cache/ratings_train.txt", field_indices=[1,2], num_discard_samples=1)
 dataset_test = nlp.data.TSVDataset(".cache/ratings_test.txt", field_indices=[1,2], num_discard_samples=1)
 
-
 # Tokenizer 가져오기
 tokenizer = get_tokenizer()
 tok = nlp.data.BERTSPTokenizer(tokenizer, vocab, lower=False)
 
-
 # 데이터셋 클래스 정의
 class BERTDataset(Dataset):
     def __init__(self, dataset, sent_idx, label_idx, bert_tokenizer, max_len,
-                 pad, pair):
+                pad, pair):
         transform = nlp.data.BERTSentenceTransform(
             bert_tokenizer, max_seq_length=max_len, pad=pad, pair=pair)
 
@@ -59,8 +54,6 @@ class BERTDataset(Dataset):
 
     def __len__(self):
         return (len(self.labels))
-    
-
 
 # hyperparameter 세팅
 max_len = 64
@@ -71,11 +64,9 @@ max_grad_norm = 1
 log_interval = 200
 learning_rate =  5e-5
 
-
 # 데이터셋 인스턴스화
 data_train = BERTDataset(dataset_train, 0, 1, tok, max_len, True, False)
 data_test = BERTDataset(dataset_test, 0, 1, tok, max_len, True, False)
-
 
 
 # DataLoader 인스턴스화
@@ -86,15 +77,15 @@ test_dataloader = torch.utils.data.DataLoader(data_test, batch_size=batch_size, 
 # 모델 클래스 정의
 class BERTClassifier(nn.Module):
     def __init__(self,
-                 bert,
-                 hidden_size = 768,
-                 num_classes=2,
-                 dr_rate=None,
-                 params=None):
+                bert,
+                hidden_size = 768,
+                num_classes=2,
+                dr_rate=None,
+                params=None):
         super(BERTClassifier, self).__init__()
         self.bert = bert
         self.dr_rate = dr_rate
-                 
+
         self.classifier = nn.Linear(hidden_size , num_classes)
         if dr_rate:
             self.dropout = nn.Dropout(p=dr_rate)
@@ -114,8 +105,8 @@ class BERTClassifier(nn.Module):
         else:
             out = pooler
         return self.classifier(out)
-    
-	
+
+
 # 모델 인스턴스화
 model = BERTClassifier(bertmodel,  dr_rate=0.5).to(device)
 
@@ -128,16 +119,13 @@ optimizer_grouped_parameters = [
     {'params': [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
 ]
 
-
 # optimizer, loss 인스턴스화
 optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 loss_fn = nn.CrossEntropyLoss()
 
-
 # iteration 관련 세팅
 t_total = len(train_dataloader) * num_epochs
 warmup_step = int(t_total * warmup_ratio)
-
 
 # Scheduler 인스턴스화
 scheduler = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps=warmup_step, num_training_steps=t_total)
