@@ -1,9 +1,5 @@
-### train_1.py
-# 실험조건) 단순히 영화리뷰, 장소리뷰 데이터셋을 섞어 BERT를 fine tuning
-# output layer: sigmoid
-# loss: MSE
-# accuracy: MAE
-
+### train_2.py
+# 실험조건) BERT에 영화리뷰 데이터셋으로 1차적으로 fine tuning, 2차적으로 장소리뷰 데이셋으로 fine tuning
 
 # 패키지 설치
 import torch
@@ -80,17 +76,13 @@ learning_rate =  5e-5
 
 # 데이터셋 인스턴스화
 data_movie_train = BERTDataset(movie_train, 0, 1, tok, max_len, True, False, 'movie')
-data_place_train = BERTDataset(place_train, 0, 1, tok, max_len, True, False, 'place')
-data_train = ConcatDataset([data_movie_train, data_place_train])
 
 data_movie_test = BERTDataset(movie_test, 0, 1, tok, max_len, True, False, 'movie')
-data_place_test = BERTDataset(place_test, 0, 1, tok, max_len, True, False, 'place')
-data_test = ConcatDataset([data_movie_test, data_place_test])
 
 
 # DataLoader 인스턴스화
-train_dataloader = torch.utils.data.DataLoader(data_train, batch_size=batch_size, num_workers=5)
-test_dataloader = torch.utils.data.DataLoader(data_test, batch_size=batch_size, num_workers=5)
+train_movie_dataloader = torch.utils.data.DataLoader(data_movie_train, batch_size=batch_size, num_workers=5)
+test_movie_dataloader = torch.utils.data.DataLoader(data_movie_test, batch_size=batch_size, num_workers=5)
 
 
 # 모델 클래스 정의
@@ -146,7 +138,7 @@ optimizer = AdamW(optimizer_grouped_parameters, lr=learning_rate)
 loss_fn = nn.MSELoss()
 
 # iteration 관련 세팅
-t_total = len(train_dataloader) * num_epochs
+t_total = len(train_movie_dataloader) * num_epochs
 warmup_step = int(t_total * warmup_ratio)
 
 # Scheduler 인스턴스화
@@ -164,7 +156,7 @@ for e in range(num_epochs):
     train_acc = 0.0
     test_acc = 0.0
     model.train()
-    for batch_id, (token_ids, valid_length, segment_ids, label) in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
+    for batch_id, (token_ids, valid_length, segment_ids, label) in tqdm(enumerate(train_movie_dataloader), total=len(train_dataloader)):
         optimizer.zero_grad()
         token_ids = token_ids.long().to(device)
         segment_ids = segment_ids.long().to(device)
@@ -181,7 +173,7 @@ for e in range(num_epochs):
             print("epoch {} batch id {} loss {} train acc(MAE) {}".format(e+1, batch_id+1, loss.data.cpu().numpy(), train_acc / (batch_id+1)))
     print("epoch {} train acc {}".format(e+1, train_acc / (batch_id+1)))
     model.eval()
-    for batch_id, (token_ids, valid_length, segment_ids, label) in tqdm(enumerate(test_dataloader), total=len(test_dataloader)):
+    for batch_id, (token_ids, valid_length, segment_ids, label) in tqdm(enumerate(test_movie_dataloader), total=len(test_dataloader)):
         token_ids = token_ids.long().to(device)
         segment_ids = segment_ids.long().to(device)
         valid_length= valid_length
@@ -205,5 +197,8 @@ def infer(sentence):
 print(infer('정말 최고의 식당입니다. 완전 강추!!😝'))
 print(infer('괜찮긴 한데 가격이 좀 비싸요ㅠㅠ😐'))
 print(infer('다시는 안 갈 것 같아😡'))
+
+
+
 
 
