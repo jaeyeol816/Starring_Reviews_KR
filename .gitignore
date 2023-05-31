@@ -3,8 +3,10 @@ data
 .vscode
 __pycache__
 Train/runs
+Train/.cache
 *.zip
 .cache
 Temp
 train_1.pt
 train_2.pt
+pytorch_model.bin
