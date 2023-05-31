@@ -37,7 +37,7 @@ from transformers.optimization import get_cosine_schedule_with_warmup
 
 # GPU 사용 세팅
 # for CUDA
-device = torch.device('cuda:1')
+device = torch.device('cuda:0')
 # for Mac
 # device = torch.device('mps:0')
 
@@ -49,7 +49,7 @@ bertmodel, vocab = get_pytorch_kobert_model(cachedir=".cache")
 movie_train = nlp.data.TSVDataset("./movie_train.txt", field_indices=[1,2], num_discard_samples=1)
 place_train = nlp.data.TSVDataset("./place_train.txt", field_indices=[1,2], num_discard_samples=1)
 
-movie_test = nlp.data.TSVDataset("./movie_test.txt", field_indices=[1,2], num_discard_samples=1)
+# movie_test = nlp.data.TSVDataset("./movie_test.txt", field_indices=[1,2], num_discard_samples=1)
 place_test = nlp.data.TSVDataset("./place_test.txt", field_indices=[1,2], num_discard_samples=1)
 
 # Tokenizer 가져오기
@@ -59,18 +59,14 @@ tok = nlp.data.BERTSPTokenizer(tokenizer, vocab, lower=False)
 # 데이터셋 클래스 정의
 class BERTDataset(Dataset):
 	def __init__(self, dataset, sent_idx, label_idx, bert_tokenizer, max_len, pad, pair, type):
-		transform = nlp.data.BERTSentenceTransform(
-			bert_tokenizer, max_seq_length=max_len, pad=pad, pair=pair)
-
+		transform = nlp.data.BERTSentenceTransform(bert_tokenizer, max_seq_length=max_len, pad=pad, pair=pair)
 		self.sentences = [transform([i[sent_idx]]) for i in dataset]
 		if (type == 'movie'):
 			self.labels = [np.int32(i[label_idx]) for i in dataset]
 		else:
 			self.labels = [(np.int32(i[label_idx]) - 1) / 4 for i in dataset]
-
 	def __getitem__(self, i):
 			return (self.sentences[i] + (self.labels[i], ))
-
 	def __len__(self):
 			return (len(self.labels))
 
@@ -89,7 +85,7 @@ class BERTPredictDataset(Dataset):
 max_len = 64
 batch_size = 32
 warmup_ratio = 0.1
-num_epochs = 5
+num_epochs = 2
 max_grad_norm = 1
 log_interval = 200
 learning_rate =  5e-5
@@ -205,9 +201,9 @@ for e in range(num_epochs):
             print("epoch {} batch id {} loss {} train acc(MAE inverse) {}".format(e+1, batch_id+1, loss.data.cpu().numpy(), train_acc / (batch_id+1)))
 	    			# for TensorBoard
             writer.add_scalar('training loss', loss.data.cpu().numpy(), e+1 + batch_id+1)
-            writer.close()
+            # writer.close()
             writer.add_scalar('training accuracy (MAE)', train_acc / (batch_id+1), e+1 + batch_id+1)
-            writer.close()
+            # writer.close()
     print("epoch {} train acc {}".format(e+1, train_acc / (batch_id+1)))
     model.eval()
     for batch_id, (token_ids, valid_length, segment_ids, label) in tqdm(enumerate(test_dataloader), total=len(test_dataloader)):
@@ -219,7 +215,7 @@ for e in range(num_epochs):
         test_acc += calc_accuracy(out, label)
     print("epoch {} test acc(MAE) {}".format(e+1, test_acc / (batch_id+1)))
     writer.add_scalar('test accuracy (MAE)', test_acc / (batch_id+1), e+1)
-    writer.close()
+    # writer.close()
 
 
 # 모델 저장하기
@@ -243,5 +239,7 @@ def query_rating(sentence):
 print(query_rating('정말 최고의 식당입니다. 완전 강추!!😝'))
 print(query_rating('괜찮긴 한데 가격이 좀 비싸요ㅠㅠ😐'))
 print(query_rating('다시는 안 갈 것 같아😡'))
+print(query_rating('꽤 괜찮았어요. 자주 가고 싶습니다'))
+print(query_rating('가게 분위기는 좋고 청결했지만 좀 짰다..'))
 
 
