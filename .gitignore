@@ -2,3 +2,9 @@
 data
 .vscode
 __pycache__
+Train/runs
+*.zip
+.cache
+Temp
+train_1.pt
+train_2.pt
