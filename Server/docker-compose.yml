@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  star_reviews_server:
+    container_name: star_reviews_server
+    image: jaeyeol816/star_reviews_server
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: Dockerfile

@@ -7,6 +7,8 @@ Train/.cache
 Temp/.cache
 Temp/models
 Temp/runs
+Server/.cache
+Server/models
 *.zip
 .cache
 train_1.pt
