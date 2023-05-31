@@ -10,14 +10,10 @@ import numpy as np
 from tqdm import tqdm
 import os
 from torch.utils.data import ConcatDataset
-from torch.utils.tensorboard import SummaryWriter
 
-
-# For TensorBoard
-writer = SummaryWriter('runs/train1')
 
 # For saving
-model_save_path = './models/train_1.pt'
+model_save_path = './models/regressor.pt'
 
 
 # kobert 라이브러리 임포트
@@ -25,15 +21,10 @@ from kobert import get_tokenizer
 from kobert import get_pytorch_kobert_model
 
 
-# transformers 라이브러리 임포트
-from transformers import AdamW
-from transformers.optimization import get_cosine_schedule_with_warmup
-
 # GPU 사용 세팅
 # for CUDA
 device = torch.device('cuda:0')
-# for Mac
-# device = torch.device('mps:0')
+
 
 # bert 모델 불러오기   
 bertmodel, vocab = get_pytorch_kobert_model(cachedir=".cache")
@@ -45,14 +36,15 @@ tok = nlp.data.BERTSPTokenizer(tokenizer, vocab, lower=False)
 
 
 class BERTPredictDataset(Dataset):
-	def __init__(self, sentence, sent_idx, label_idx, bert_tokenizer, max_len, pad, pair):
+	def __init__(self, sentences, sent_idx, label_idx, bert_tokenizer, max_len, pad, pair):
 		transform = nlp.data.BERTSentenceTransform(bert_tokenizer, max_seq_length=max_len, pad=pad, pair=pair)
-		self.sentence = [transform(sentence)]	
-		self.labels = [np.int32(0)]		# 무의미
-	def __getitem__(self, index):
-		return self.sentence[0]
+		self.len = len(sentences)
+		self.sentences = [transform(s) for s in sentences]
+		self.labels = [(np.int32(0)) for s in sentences]
+	def __getitem__(self, i):
+			return (self.sentences[i] + (self.labels[i], ))
 	def __len__(self):
-		return len(self.labels)	
+			return (self.len)
 
 max_len = 64
 
@@ -101,24 +93,27 @@ model = BERTRegressor(bertmodel, dr_rate=0.5).to(device)
 model.load_state_dict(torch.load(model_save_path, map_location='cuda:0'))
 
 # 새로운 문장에 대해 쿼리하기
-def query_rating(sentence):
-    sample_dataset = BERTPredictDataset(sentence, 0, 1, tok, max_len, True, False)
-    sample_dataloader =  torch.utils.data.DataLoader(sample_dataset, batch_size=1, num_workers=5)
+def infer_list(reviews):
+    reviews_dataset = BERTPredictDataset(reviews, 0, 1, tok, max_len, True, False)
+    sample_dataloader =  torch.utils.data.DataLoader(reviews_dataset, batch_size=len(reviews_dataset), num_workers=5)
     it = iter(sample_dataloader)
-    token_ids, valid_length, segment_ids = next(it)
+    token_ids, valid_length, segment_ids, labels = next(it)
     token_ids = token_ids.long().to(device)
     segment_ids = segment_ids.long().to(device)
     model.eval()
     with torch.no_grad():
-        out = model(token_ids, valid_length, segment_ids)
-    scaled_out = out[0].item() * 4 + 1  # Scale the output to be between 1 and 5
-    rounded_scaled_out = round(scaled_out, 2)  # Round the scaled output to 2 decimal places
-    return rounded_scaled_out
+        outs = model(token_ids, valid_length, segment_ids)
+    np_outs = outs.to('cpu').numpy()
+    scaled_out = np_outs* 4 + 1  # Scale the output to be between 1 and 5
+    rounded_scaled_outs = np.round(scaled_out, 2)  # Round the scaled output to 2 decimal places
+    avg = np.round(np.average(rounded_scaled_outs), 2)
+    outputs = [(s, round(float(o),2)) for s, o in zip(reviews, rounded_scaled_outs)]
+		# 이제 딕셔너리를 생성합니다.
+    result = {'avg': avg, 'outputs': outputs}
+    return result
 
-print(query_rating('정말 최고의 식당입니다. 완전 강추!!😝'))
-print(query_rating('괜찮긴 한데 가격이 좀 비싸요ㅠㅠ😐'))
-print(query_rating('다시는 안 갈 것 같아😡'))
-print(query_rating('꽤 괜찮았어요. 자주 가고 싶습니다'))
-print(query_rating('가게 분위기는 좋고 청결했지만 좀 짰다..'))
-
-
+print(infer_list(['정말 최고의 식당입니다. 완전 강추!!',
+	    '괜찮긴 한데 가격이 좀 비싸요ㅠㅠ😐',
+			'다시는 안 갈 것 같아😡',
+			'꽤 괜찮았어요. 자주 가고 싶습니다',
+			'가게 분위기는 좋고 청결했지만 좀 짰다..']))

@@ -3,6 +3,7 @@ from urllib.parse import quote_plus
 from dotenv import load_dotenv
 import os
 import json
+import re
 
 def get_google_map_reviews(query):
 	load_dotenv()
@@ -35,7 +36,8 @@ def get_google_map_reviews(query):
 	
 	response_json = response.json()  # JSON 파싱
 	
-	review_texts = [review['text'].replace('\n', ' ') for review in response_json['result']['reviews']]  # text 항목만 추출하고 "\n" 제거
+	# text 항목만 추출하고 "\n" 제거, 문장 단위로 분리
+	review_texts = [sentence.strip() for review in response_json['result']['reviews'] for sentence in re.split(r'(?<=[.!?])\s+', review['text'].replace('\n', ' ')) if sentence]
 	return review_texts
 
 print(get_google_map_reviews('정돈 판교점'))
