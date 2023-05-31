@@ -21,7 +21,7 @@ df['id'] = np.random.choice(range(1, df.shape[0] + 1), size=df.shape[0], replace
 df = df[['id', 'document', 'label']]
 
 # 데이터를 train set과 test set으로 나눔 (80%는 train set, 20%는 test set)
-df_train, df_test = train_test_split(df, test_size=0.2, random_state=42)
+df_train, df_test = train_test_split(df, test_size=0.05, random_state=42)
 
 # Train set과 test set을 txt 파일로 저장
 df_train.to_csv('place_train.txt', sep='\t', index=False)

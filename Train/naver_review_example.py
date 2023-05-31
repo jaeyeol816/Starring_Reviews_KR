@@ -55,11 +55,21 @@ class BERTDataset(Dataset):
     def __len__(self):
         return (len(self.labels))
 
+class BERTPredictDataset(Dataset):
+	def __init__(self, sentence, sent_idx, label_idx, bert_tokenizer, max_len, pad, pair):
+		transform = nlp.data.BERTSentenceTransform(bert_tokenizer, max_seq_length=max_len, pad=pad, pair=pair)
+		self.sentence = [transform(sentence)]	
+		self.labels = [np.int32(0)]		# 무의미
+	def __getitem__(self, index):
+		return self.sentence[0]
+	def __len__(self):
+		return len(self.labels)	
+
 # hyperparameter 세팅
 max_len = 64
 batch_size = 64
 warmup_ratio = 0.1
-num_epochs = 5
+num_epochs = 1
 max_grad_norm = 1
 log_interval = 200
 learning_rate =  5e-5
@@ -168,5 +178,25 @@ for e in range(num_epochs):
         out = model(token_ids, valid_length, segment_ids)
         test_acc += calc_accuracy(out, label)
     print("epoch {} test acc {}".format(e+1, test_acc / (batch_id+1)))
+
+
+# 새로운 문장에 대해 쿼리하기
+def infer(sentence):
+    sample_dataset = BERTPredictDataset(sentence, 0, 1, tok, max_len, True, False)
+    sample_dataloader =  torch.utils.data.DataLoader(sample_dataset, batch_size=1, num_workers=5)
+    it = iter(sample_dataloader)
+    token_ids, valid_length, segment_ids= next(it)
+    token_ids = token_ids.long().to(device)
+    segment_ids = segment_ids.long().to(device)
+    model.eval()
+    with torch.no_grad():
+        out = model(token_ids, valid_length, segment_ids)
+    print(out)
+    return out[0,1].item()
+
+print(infer('정말 최고의 식당입니다. 완전 강추!!😝'))
+print(infer('괜찮긴 한데 가격이 좀 비싸요ㅠㅠ😐'))
+print(infer('다시는 안 갈 것 같아😡'))
+
 
 
