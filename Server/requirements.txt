@@ -1,0 +1,13 @@
+numpy == 1.23.1
+boto3 ==  1.26.143 
+gluonnlp == 0.10.0
+mxnet == 1.9.1
+onnxruntime == 1.15.0
+sentencepiece >= 0.1.6, <=0.1.96
+torch == 2.0.1 
+transformers == 4.29.2
+pandas ==  2.0.2
+scikit-learn == 1.2.2
+tensorboard == 2.13.0
+Flask == 2.3.2 
+python-dotenv == 1.0.0
