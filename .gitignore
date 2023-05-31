@@ -4,9 +4,11 @@ data
 __pycache__
 Train/runs
 Train/.cache
+Temp/.cache
+Temp/models
 *.zip
 .cache
-Temp
 train_1.pt
 train_2.pt
 pytorch_model.bin
+.env

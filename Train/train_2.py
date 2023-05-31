@@ -49,7 +49,7 @@ bertmodel, vocab = get_pytorch_kobert_model(cachedir=".cache")
 movie_train = nlp.data.TSVDataset("./movie_train.txt", field_indices=[1,2], num_discard_samples=1)
 place_train = nlp.data.TSVDataset("./place_train.txt", field_indices=[1,2], num_discard_samples=1)
 
-movie_test = nlp.data.TSVDataset("./movie_test.txt", field_indices=[1,2], num_discard_samples=1)
+# movie_test = nlp.data.TSVDataset("./movie_test.txt", field_indices=[1,2], num_discard_samples=1)
 place_test = nlp.data.TSVDataset("./place_test.txt", field_indices=[1,2], num_discard_samples=1)
 
 # Tokenizer 가져오기
@@ -86,7 +86,7 @@ class BERTPredictDataset(Dataset):
 max_len = 64
 batch_size = 32
 warmup_ratio = 0.1
-num_epochs = 1
+num_epochs = 10
 max_grad_norm = 1
 log_interval = 200
 learning_rate =  5e-5
