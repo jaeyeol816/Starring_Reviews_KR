@@ -95,7 +95,10 @@ model.load_state_dict(torch.load(model_save_path, map_location='cuda:0'))
 # 새로운 문장에 대해 쿼리하기
 def infer_list(reviews):
     reviews_dataset = BERTPredictDataset(reviews, 0, 1, tok, max_len, True, False)
-    sample_dataloader =  torch.utils.data.DataLoader(reviews_dataset, batch_size=len(reviews_dataset), num_workers=5)
+    batch_size = len(reviews_dataset)
+    if batch_size > 64:
+      batch_size = 64
+    sample_dataloader =  torch.utils.data.DataLoader(reviews_dataset, batch_size=batch_size, num_workers=5)
     it = iter(sample_dataloader)
     token_ids, valid_length, segment_ids, labels = next(it)
     token_ids = token_ids.long().to(device)
