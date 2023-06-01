@@ -1,69 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
 body {
-	font-family: 'Noto Sans KR', sans-serif;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	padding: 50px;
-	box-sizing: border-box;
-	overflow: hidden;
+	background-image: url('map_background.avif'); /* 여기에 배경 이미지의 URL 또는 경로를 넣으세요 */
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
 }
 
-.background {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	z-index: -1;
-}
-
-.background img {
-	height: 100%;
-	width: 100%;
-	object-fit: cover;
-	filter: blur(5px);
+.container {
+	backdrop-filter: blur(10px);
 }
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-image: url("background.jpg");
-    background-size: cover;
-    background-position: center;
-    background-blur: 5px;
+    background-color: #f5f5f5;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    padding: 50px;
-    box-sizing: border-box;
 }
 
 .container {
     text-align: center;
     padding: 20px;
-    background-color: rgba(255,255,255,0.8);
+    background-color: #fff;
     border-radius: 8px;
     box-shadow: 0px 0px 10px 0px #aaa;
-    width: 100%;
-    max-width: 800px;
 }
 
 .title {
     color: #333;
     margin-bottom: 20px;
-}
-
-.subtitle {
-    color: #777;
-    margin-bottom: 20px;
-}
-
-.description {
-    color: #666;
-    margin-bottom: 10px;
 }
 
 .search-container {
@@ -77,7 +44,6 @@ body {
     font-size: 16px;
     border-radius: 4px;
     border: 1px solid #ddd;
-    width: 70%;
 }
 
 #search-btn {
@@ -88,7 +54,6 @@ body {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    width: 25%;
 }
 
 #loading {
@@ -106,8 +71,35 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-#avg-star, #outputs {
-    margin: 20px 0;
+#results {
+    display: none;
+    text-align: left;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+#avg-star {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.scrollable {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#close-btn {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 #error-message {
@@ -121,4 +113,32 @@ body {
 
 .left-align {
 	text-align: left;
+}
+
+.info {
+	margin-bottom: 20px;
+}
+
+.score {
+	font-weight: bold;
+}
+
+.container {
+	width: 700px; /* 원하는 너비로 조정하세요 */
+	height: 400px; /* 원하는 높이로 조정하세요 */
+}
+
+.subtitle {
+	color: #777;
+	margin-bottom: 20px;
+}
+
+#search {
+	width: 70%; /* 원하는 너비로 조정하세요 */
+	margin-right: 10px; /* 원하는 마진으로 조정하세요 */
+}
+
+#results {
+	background-color: #f2f2f2; /* 원하는 색상 코드로 변경하세요 */
+
 }

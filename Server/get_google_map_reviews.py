@@ -42,4 +42,3 @@ def get_google_map_reviews(query):
 	except:
 		review_texts = []
 	return review_texts
-
