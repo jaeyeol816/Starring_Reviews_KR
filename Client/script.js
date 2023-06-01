@@ -13,7 +13,7 @@ async function searchReviews() {
 	results.style.display = 'none';
 
 	try {
-			let response = await fetch('http://localhost:5000/predict', {
+			let response = await fetch('http://34.22.81.10:5000/predict', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ keyword: keyword })
