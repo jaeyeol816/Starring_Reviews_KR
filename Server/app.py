@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request\
+from flask import Flask, jsonify, request
 
 from infer import infer_list
 from get_naver_blog_reviews import get_naver_blog_reviews

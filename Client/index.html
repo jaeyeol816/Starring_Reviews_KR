@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>잃어버린 지도 평점을 찾아서</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+</head>
+<body>
+		<div class="background">
+			<img src="map_background.avif" alt="Map Background">
+		</div>	
+    <div class="container">
+        <h1 class="title">잃어버린 한국어 지도 평점을 찾아서</h1>
+        <h2 class="subtitle">이장원 교수님 사랑합니다💙💙 SKKU 2023 AI❤️</h2>
+				<p class="description">자동 검색 API 및 한국어 BERT모델을 이용한 평점 예측 서비스
+					<a href="https://github.com/jaeyeol816/Starring_Reviews_KR" target="_blank">show project page</a>
+			</p>
+			<p class="description left-align">검색창에 평점을 측정하고 싶은 장소의 검색어를 입력하세요</p>
+        <div class="search-container">
+            <input id="search" type="text" placeholder="키워드를 입력하세요...">
+            <button id="search-btn" onclick="searchReviews()">검색</button>
+        </div>
+        <div id="loading" class="loader"></div>
+        <div id="avg-star"></div>
+        <div id="outputs"></div>
+        <div id="error-message"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
