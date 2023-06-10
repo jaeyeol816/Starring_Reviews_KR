@@ -242,4 +242,3 @@ print(query_rating('다시는 안 갈 것 같아😡'))
 print(query_rating('꽤 괜찮았어요. 자주 가고 싶습니다'))
 print(query_rating('가게 분위기는 좋고 청결했지만 좀 짰다..'))
 
-

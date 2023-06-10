@@ -8,3 +8,4 @@ transformers
 pandas
 scikit-learn
 tensorboard
+pandas

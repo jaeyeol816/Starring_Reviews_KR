@@ -86,7 +86,7 @@ class BERTPredictDataset(Dataset):
 max_len = 64
 batch_size = 32
 warmup_ratio = 0.1
-num_epochs = 10
+num_epochs = 1
 max_grad_norm = 1
 log_interval = 200
 learning_rate =  5e-5
@@ -283,5 +283,4 @@ print(query_rating('괜찮긴 한데 가격이 좀 비싸요ㅠㅠ😐'))
 print(query_rating('다시는 안 갈 것 같아😡'))
 print(query_rating('꽤 괜찮았어요. 자주 가고 싶습니다'))
 print(query_rating('가게 분위기는 좋고 청결했지만 좀 짰다..'))
-
 

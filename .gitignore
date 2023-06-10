@@ -7,11 +7,13 @@ Train/.cache
 Temp/.cache
 Temp/models
 Temp/runs
+Train/results1
+Train/results2
 Server/.cache
 Server/models
 *.zip
 .cache
-train_1.pt
-train_2.pt
 pytorch_model.bin
 .env
+keywords_for_query.txt
+*.pt
