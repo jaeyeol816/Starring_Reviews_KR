@@ -9,6 +9,8 @@
 - 최적의 성능을 갖도록 모델 설계
 - Google Maps Platform API / Naver Search API를 활용한 실제 사용가능한 클라이언트-서버 구조 어플리케이션 개발
 
+**필요성**
+
 ### 2. Model
 #### 2-1. Dataset
 - `Train/movie_train.txt` : 한국어 영화 리뷰 데이터셋. 0(부정)과 1(긍정)으로 라벨링됨 (from KoBERT, 약 20만개)
@@ -21,9 +23,6 @@
 #### 2-3. Implementation
 - pytorch 및 KoBERT 라이브러리 기반 구현
 - 모델 클래스: `Train/train_1B.py`의 `BERTRegressor` 클래스
-- Dataset 클래스: 
-- Optimizor:
-- Batch Size: 
 
 ### 3. System Architecture
 
