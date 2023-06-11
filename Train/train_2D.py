@@ -173,7 +173,7 @@ def calc_accuracy(X,Y):
 
 
 # Training Loop (With Movie Training Dataset)
-for e in range(num_epochs-1):
+for e in range(num_epochs-2):
     train_acc = 0.0
     test_acc = 0.0
     model.train()
@@ -210,10 +210,10 @@ for e in range(num_epochs-1):
     writer.add_scalar('test accuracy (MAE inverse)', test_acc / (batch_id+1), (e+1)*len(data_movie_train))
     # writer.close()
 
-n_iter_after_moive = (num_epochs-1) * len(data_movie_train)	
+n_iter_after_moive = (num_epochs-2) * len(data_movie_train)	
 
 # Training Loop (with Place Trianing Dataset)
-for e in range(num_epochs + int(len(data_movie_train) / len(data_place_train))):
+for e in range(num_epochs + 2 * int(len(data_movie_train) / len(data_place_train))):
 	train_acc = 0.0
 	test_acc = 0.0
 	model.train()
@@ -246,8 +246,8 @@ for e in range(num_epochs + int(len(data_movie_train) / len(data_place_train))):
 			label = label.long().to(device)
 			out = model(token_ids, valid_length, segment_ids)
 			test_acc += calc_accuracy(out, label)
-	print("place epoch {} test acc(MAE) {}".format(e+1, test_acc / (batch_id+1)))
-	writer.add_scalar('test accuracy (MAE)', test_acc / (batch_id+1), n_iter_after_moive + (e+1)*len(data_place_train))
+	print("place epoch {} test acc(MAE inverse) {}".format(e+1, test_acc / (batch_id+1)))
+	writer.add_scalar('test accuracy (MAE inverse)', test_acc / (batch_id+1), n_iter_after_moive + (e+1)*len(data_place_train))
 	# writer.close()
 
 

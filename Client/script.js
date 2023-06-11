@@ -1,3 +1,6 @@
+const url = '127.0.0.1'
+const port = '5000'
+
 async function searchReviews() {
 	let keyword = document.getElementById('search').value;
 	let loading = document.getElementById('loading');
@@ -12,8 +15,9 @@ async function searchReviews() {
 	loading.style.display = 'block';
 	results.style.display = 'none';
 
+
 	try {
-			let response = await fetch('http://34.22.81.10:5000/predict', {
+			let response = await fetch(`http://${url}:${port}/predict`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ keyword: keyword })
