@@ -8,7 +8,6 @@
 [SKTBrain의 KoBERT](https://github.com/SKTBrain/KoBERT)모델을 확장하여 한국어로 된 장소(식당, 카페, 호텔 등)의 리뷰 데이터에 감정 분석(sentiment analysis) 프로젝트입니다. 다음 두 가지를 포함합니다.
 - 최적의 성능을 갖도록 모델 설계
 - Google Maps Platform API / Naver Search API를 활용한 실제 사용가능한 클라이언트-서버 구조 어플리케이션 개발
-<img width="777" alt="demo" src="https://github.com/jaeyeol816/Starring_Reviews_KR/assets/80497842/846a80ec-4993-4a63-a7e1-042baa27b69f">
 
 
 ### 2. Model
