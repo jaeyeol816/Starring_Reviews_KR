@@ -29,7 +29,7 @@
 ![Screenshot 2023-06-13 at 11 35 33 PM](https://github.com/jaeyeol816/Starring_Reviews_KR/assets/80497842/581428fb-9907-43b5-8297-e5accca7fe1b)
 
 ### 4. Usage
-#### 4-1. Training 
+### 4-1. Training 
 - CUDA 11.X 버전이 설치된 환경에서 실행 권장
 - (1) 리포지토리를 clone한 후 Train디렉토리로 이동합니다.
   - `git clone https://github.com/jaeyeol816/Starring_Reviews_KR.git`
@@ -51,14 +51,30 @@
 >   - `python seperate_by_sentence.py`
 >   - `python transform_csv_to_txt.py`
 
-#### 4-2. Running the Server
+### 4-2. Running the Server
 - CUDA 11.X 버전이 설치된 환경에서 실행 권장
-- (1) 리포지토리
+- (1) 리포지토리를 clone한 후 Server 디렉토리로 이동합니다.
   - `git clone https://github.com/jaeyeol816/Starring_Reviews_KR.git`
   - `cd Server`
 - (2) Anaconda 가상환경을 만듭니다. (파이썬 3.9버전 권장)
   - `conda create --name starring_server python=3.9`
+- (3) 필요한 패키지를 설치합니다.
+  - `pip install -r requirements.txt`
+- (4) Google Maps Platform API 키, Naver Search API 키를 발급받습니다.
+- (5) 발급받은 API키를 아래 내용과 같이 `Server/.env`파일을 만든 후 입력합니다.
+```
+GOOGLE_API_KEY={발급받은 Google Maps Platform 키}
+NAVER_CLIENT_ID={발급받은 Naver Search Console 의 Clinet ID}
+NAVER_CLIENT_SECRET={발급받은 Naver Search Console의 Clinet Secret 키}
+```
+- (6) Flask 서버를 실행합니다.
+  - `flask run`
+- 기본 설정값인 `localhost:5000`을 통해 접속할 수 있습니다. (REST API의 `POST /predict` 사용)
 
+### 4-3. Running the Client
+- (1) 리포지토리를 clone합니다.
+  - `git clone https://github.com/jaeyeol816/Starring_Reviews_KR.git`
+- (2) 파일 탐색기(Explorer, Finder)에서 `Client/index.html`파일을 클릭하여 엽니다.
 
 ### 5. Performance Analysis
 
