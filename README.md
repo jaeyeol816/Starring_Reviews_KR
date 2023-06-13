@@ -16,7 +16,7 @@
 - `Train/place_train.txt`, `Train/place_test.txt` : 한국어 장소 리뷰 데이터셋. (약 2만개)
 
 #### 2-2. Model Architecture
-<img width="1045" alt="model_architecture" src="https://github.com/jaeyeol816/Starring_Reviews_KR/assets/80497842/6c2fe0ef-74ce-4baa-900d-561ef1276ccb">
+![Screenshot 2023-06-13 at 11 22 02 PM](https://github.com/jaeyeol816/Starring_Reviews_KR/assets/80497842/9449d492-d5e4-44df-ae39-51461326e4f1)
 - BERT모델에 긍정/부정 Regression을 위한 2개의 hidden layer추가 (Linear -> ReLU -> Linear -> Sigmoid)
 - MSE(Mean Squared Error) Loss, MAE (Mean Absolute Error) Inverse Accuracy
 
@@ -25,6 +25,8 @@
 - 모델 클래스: `Train/train_1B.py`의 `BERTRegressor` 클래스
 
 ### 3. System Architecture
+![Screenshot 2023-06-13 at 11 35 33 PM](https://github.com/jaeyeol816/Starring_Reviews_KR/assets/80497842/581428fb-9907-43b5-8297-e5accca7fe1b)
+
 
 ### 4. Usage
 
