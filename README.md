@@ -61,7 +61,7 @@
 - (3) 필요한 패키지를 설치합니다.
   - `pip install -r requirements.txt`
 - (4) Google Maps Platform API 키, Naver Search API 키를 발급받습니다.
-- (5) 발급받은 API키를 아래 내용과 같이 `Server/.env`파일을 만든 후 입력합니다.
+- (5) `Server/.env`파일을 만든 후 발급받은 API키를 아래 내용과 같이 입력합니다.
 ```
 GOOGLE_API_KEY={발급받은 Google Maps Platform 키}
 NAVER_CLIENT_ID={발급받은 Naver Search Console 의 Clinet ID}
